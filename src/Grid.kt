@@ -10,14 +10,12 @@ class Grid(var grid: Array<CharArray>) {
 
     fun columns(): Int = grid[0].size
 
-    fun Points(): List<Point> {
-        val points: MutableList<Point> = ArrayList()
-        for (y in grid.indices) {
-            for (x in grid[y].indices) {
-                points.add(Point(x, y))
+    fun getAllPoints(): List<Point> = buildList<Point> {
+        grid.forEachIndexed { i, row ->
+            row.forEachIndexed { j, Point ->
+                add(Point(j, i))
             }
         }
-        return points
     }
 
     fun inside(p: Point): Boolean {
@@ -28,42 +26,29 @@ class Grid(var grid: Array<CharArray>) {
 
     fun find(c: Char): Point? = findAll(c).firstOrNull()
 
-    fun findAll(c: Char): List<Point> = buildList<Point> {
-        grid.forEachIndexed{ i, row ->
-            row.forEachIndexed {j, Point ->
-                if (Point == c) {
-                    add(Point(j, i))
+    fun findAll(c: Char): List<Point> = findAnyWith { c == it}.values.flatten()
+
+    fun findAny(cs: List<Char>): Map<Char, Point> = findWith { char -> cs.any {char == it}  }
+
+    fun findWith(predicate: (Char) -> Boolean): Map<Char, Point> = findAnyWith(predicate).map {
+        it.key to it.value.first()
+    }.toMap()
+
+    fun findAnyWith(predicate: (Char) -> Boolean): Map<Char, List<Point>> = buildMap<Char, MutableList<Point>> {
+        grid.forEachIndexed { i, row ->
+            row.forEachIndexed { j, char ->
+                if (predicate(char)) {
+                    if(containsKey(char)) {
+                        get(char)?.add(Point(j, i))
+                    } else {
+                        put(char, mutableListOf(Point(j, i)))
+                    }
                 }
             }
         }
     }
 
-    fun findAny(cs: List<Char>): Map<Char, Point> {
-        val finds = mutableMapOf<Char, Point>()
-        for (i in grid.indices) {
-            for (j in grid[0].indices) {
-                var foundChar = '.'
-                if (cs.any {
-                        foundChar = it
-                        it == grid[i][j]
-                    }) {
-                    finds[foundChar] = Point(j, i)
-                }
-            }
-        }
-        return finds
-    }
-
-    fun findInRow(y: Int, c: Char): Point? {
-        for (x in 0..<columns()) {
-            if (grid[y][x] == '.') {
-                return Point(x, y)
-            }
-        }
-        return null
-    }
-
-    fun get(x: Int, y: Int): Char =  grid[y][x]
+    fun get(x: Int, y: Int): Char = grid[y][x]
 
     fun get(p: Point): Char {
         try {
@@ -81,19 +66,9 @@ class Grid(var grid: Array<CharArray>) {
         grid[p.y][p.x] = c
     }
 
-    fun at(p: Point): Char = at(p.x, p.y)
-
-    fun at(x: Int, y: Int): Char {
-        if (y < 0 || y >= grid.size || x < 0 || x >= grid[0].size) {
-            return '-'
-        }
-        return grid[y][x]
-    }
-
     fun copy(): Grid = Grid(Array(rows()) { rowIndex ->
         grid[rowIndex].clone() // Clone each inner array to ensure a deep copy
     })
-
 
     fun print() {
         for (i in grid.indices) {

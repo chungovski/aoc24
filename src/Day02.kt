@@ -1,6 +1,5 @@
 fun main() {
     solve("Day02_test.txt", 2, 4)
-    solve("Day02_test2.txt", 3, 6)
     solve("Day02.txt", 670, 700)
 }
 

@@ -30,7 +30,7 @@ private fun part2(grid: Grid): Int {
             .filter { it.name.startsWith("DIAGONAL") }
             .count { dir ->
                 (grid.get(aPoint.move(dir.point)) == 'M' && grid.get(aPoint.moveOpposite(dir.point)) == 'S') ||
-                    (grid.get(aPoint.move(dir.point)) == 'S' && grid.get(aPoint.moveOpposite(dir.point)) == 'M')
+                        (grid.get(aPoint.move(dir.point)) == 'S' && grid.get(aPoint.moveOpposite(dir.point)) == 'M')
             } / 2 == 2 //removed double counts returning 2
 
     }
