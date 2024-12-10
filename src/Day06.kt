@@ -17,11 +17,11 @@ private fun part1(grid: Grid): Int {
 
 private fun part2(grid: Grid, walkedGrid: Grid): Int = walkedGrid.findAll('X').parallelStream().filter {
     var shouldRunFurther = true
-    commandGuard(grid, { guard, pos ->
-        if(it == pos || it == pos.move(guard.direction.point)) {
+    commandGuard(grid) { guard, pos ->
+        if (it == pos || it == pos.move(guard.direction.point)) {
             shouldRunFurther = false
         }
-    })
+    }
 
     if(shouldRunFurther) {
         val editedGrid = grid.copy()
@@ -43,20 +43,20 @@ const val STEP = 'X'
 private fun startWalking(grid: Grid) {
     var guardOnGrid = true
     val path = mutableMapOf<Direction, MutableSet<Point>>().apply {
-        GUARD_CHARS.entries.map { it.direction }.forEach { put(it, mutableSetOf()) }
+        GuardChars.entries.map { it.direction }.forEach { put(it, mutableSetOf()) }
     }
     while (guardOnGrid) {
-        commandGuard(grid, { guard, pos ->
+        commandGuard(grid) { guard, pos ->
             val newPosition = walkStraight(pos, guard.direction, grid, path)
             guardOnGrid = grid.inside(newPosition)
-        })
-        guardOnGrid = grid.findAny(GUARD_CHARS.entries.map { it.char }).isNotEmpty()
+        }
+        guardOnGrid = grid.findAny(GuardChars.entries.map { it.char }).isNotEmpty()
     }
 }
 
-private fun commandGuard(grid: Grid, action: (GUARD_CHARS, Point) -> Unit) {
-    grid.findAny(GUARD_CHARS.entries.map { it.char }).forEach { char, pos ->
-        GUARD_CHARS.from(char)?.let {
+private fun commandGuard(grid: Grid, action: (GuardChars, Point) -> Unit) {
+    grid.findAny(GuardChars.entries.map { it.char }).forEach { (char, pos) ->
+        GuardChars.from(char)?.let {
             action(it, pos)
         }
     }
@@ -81,7 +81,7 @@ fun walkStraight(
     if (grid.get(newPosition.move(direction.point)) == Grid.OUT_OF_BOUND_CHAR) {
         grid.set(newPosition, STEP)
     } else {
-        GUARD_CHARS.from(turn(direction))?.let { grid.set(newPosition, it.char) }
+        GuardChars.from(turn(direction))?.let { grid.set(newPosition, it.char) }
     }
     return newPosition
 }
@@ -94,7 +94,7 @@ private fun turn(direction: Direction): Direction = when (direction) {
     else -> Direction.VERTICAL_BACKWARDS
 }
 
-private enum class GUARD_CHARS(val direction: Direction, val char: Char) {
+private enum class GuardChars(val direction: Direction, val char: Char) {
     UP(Direction.VERTICAL_BACKWARDS, '^'),
     RIGHT(Direction.HORIZONTAL, '>'),
     DOWN(Direction.VERTICAL, 'v'),

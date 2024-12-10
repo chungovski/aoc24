@@ -5,9 +5,9 @@ fun main() {
 
 private fun solve(path: String, part1: Int, part2: Int) {
     val lines = lines(path)
-    val indexOfSeperator = lines.indexOf("")
-    val rules = lines.subList(0, indexOfSeperator)
-    val updates = lines.subList(indexOfSeperator + 1, lines.size)
+    val indexOfSeparator = lines.indexOf("")
+    val rules = lines.subList(0, indexOfSeparator)
+    val updates = lines.subList(indexOfSeparator + 1, lines.size)
     check(part1, part1(rules, updates))
     check(part2, part2(rules, updates))
 }

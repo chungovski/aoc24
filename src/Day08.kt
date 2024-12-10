@@ -24,7 +24,7 @@ private fun part2(grid: Grid): Int  = countSteps(grid) { points, i, j, gr ->
 }
 
 private fun countSteps(grid: Grid, addStepFunction: (List<Point>, Int, Int, Grid) -> Set<Point>): Int {
-    return buildSet<Point> {
+    return buildSet {
         grid.findAnyWith { it.toString().matches(Regex("\\w")) }
             .filter { it.value.size > 1 }
             .forEach { (_, points) ->
