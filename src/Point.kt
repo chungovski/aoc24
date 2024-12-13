@@ -7,4 +7,3 @@ data class Point(val x: Int, val y: Int) {
 
     fun getDifference(p: Point): Point = Point(p.x - this.x, p.y - this.y)
 }
-

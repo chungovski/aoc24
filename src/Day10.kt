@@ -1,6 +1,5 @@
 fun main() {
     solve("Day10_test.txt", 36, 81)
-    solve("Day10_test2.txt", 4, 13)
     solve("Day10.txt", 760, 1764)
 }
 

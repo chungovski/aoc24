@@ -10,39 +10,51 @@ class Grid(var grid: Array<CharArray>) {
 
     fun columns(): Int = grid[0].size
 
-    fun getAllPoints(): List<Point> = buildList<Point> {
-        grid.forEachIndexed { i, row ->
-            row.forEachIndexed { j, Point ->
-                add(Point(j, i))
+    fun getAllPoints(): List<Pair<Point, Char>> = buildList {
+        grid.forEachIndexed { y, row ->
+            row.forEachIndexed { x, char ->
+                add(Point(x, y) to char)
             }
         }
     }
 
-    fun inside(p: Point): Boolean {
-        val validYRange = 0 until rows()
-        val validXRange = 0 until columns()
-        return p.y in validYRange && p.x in validXRange
-    }
+    fun inside(p: Point): Boolean = checkRange(p, 0 until rows(),  0 until columns())
+
+    fun isBorder(p: Point): Boolean= checkRange(p, 0,  0 until columns()) ||
+        checkRange(p, rows(),  0 until columns()) ||
+        checkRange(p, 0 until rows(),  0) ||
+        checkRange(p, 0 until rows(),  columns())
+
+
+    fun isCorner(p: Point): Boolean = (p.y == 0 && p.x == 0) ||
+        (p.y == 0 && p.x == columns()) ||
+        (p.y == rows() && p.x == 0) ||
+        (p.y == rows() && p.x == columns())
+
+    private fun checkRange(p: Point, yRange: IntRange, xRange: IntRange): Boolean = p.y in yRange && p.x in xRange
+    private fun checkRange(p: Point, y: Int, xRange: IntRange): Boolean = p.y == y && p.x in xRange
+    private fun checkRange(p: Point, yRange: IntRange, x: Int): Boolean = p.y in yRange && p.x == x
+
 
     fun find(c: Char): Point? = findAll(c).firstOrNull()
 
-    fun findAll(c: Char): List<Point> = findAnyWith { c == it}.values.flatten()
+    fun findAll(c: Char): List<Point> = findAnyWith { c == it }.values.flatten()
 
-    fun findAny(cs: List<Char>): Map<Char, Point> = findWith { char -> cs.any {char == it}  }
+    fun findAny(cs: List<Char>): Map<Char, Point> = findWith { char -> cs.any { char == it } }
 
     fun findWith(predicate: (Char) -> Boolean): Map<Char, Point> = findAnyWith(predicate).map {
         it.key to it.value.first()
     }.toMap()
 
+    fun getDistinct(): List<Char> = grid.flatMap { it.distinct() }
+
     fun findAnyWith(predicate: (Char) -> Boolean): Map<Char, List<Point>> = buildMap<Char, MutableList<Point>> {
-        grid.forEachIndexed { i, row ->
-            row.forEachIndexed { j, char ->
-                if (predicate(char)) {
-                    if(containsKey(char)) {
-                        get(char)?.add(Point(j, i))
-                    } else {
-                        put(char, mutableListOf(Point(j, i)))
-                    }
+        getAllPoints().forEach { (point, char) ->
+            if (predicate(char)) {
+                if (containsKey(char)) {
+                    get(char)?.add(point)
+                } else {
+                    put(char, mutableListOf(point))
                 }
             }
         }

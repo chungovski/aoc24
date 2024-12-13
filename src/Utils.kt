@@ -53,6 +53,8 @@ fun <T> toColumns(lines: List<List<T>>): List<MutableList<T>> {
     }
 }
 
+fun String.sections() = this.split("\n\n")
+
 /**
  * Converts string to md5 hash.
  */

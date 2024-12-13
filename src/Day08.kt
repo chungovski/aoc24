@@ -44,4 +44,3 @@ private fun getAllMovesInside(point: Point, difference: Point, grid: Grid): Set<
         .takeWhile { grid.inside(it) }
         .forEach { add(it) }
 }
-
