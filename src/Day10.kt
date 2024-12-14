@@ -17,23 +17,19 @@ private fun part2(grid: Grid): Int = grid.findAll('0').sumOf {
     it.findNextHeight(1, grid).count()
 }
 
-private fun Point.findNextHeight(i: Int, grid: Grid): List<Point> {
-    if (i == 10) { // input index starts with 1
-        return listOf(this)
-    }
-    return nextMoves(i.digitToChar(), grid).fold(listOf()) { list, point ->
+private fun Point.findNextHeight(i: Int, grid: Grid): List<Point> = when {
+    i == 10 -> listOf(this) // input index starts with 1
+    else -> nextMoves(i.digitToChar(), grid).fold(listOf()) { list, point ->
         list + point.findNextHeight(i + 1, grid)
     }
 }
 
 private fun Point.nextMoves(char: Char, grid: Grid): List<Point> = buildList {
-    ALLOWED_MOVES.forEach {
-        val movedPoint = move(it.point)
-        if (grid.get(movedPoint) == char) {
-            add(movedPoint)
+    cardinalDirections.forEach {
+        move(it.point).let {
+            if (grid.get(it) == char) {
+                add(it)
+            }
         }
     }
 }
-
-private val ALLOWED_MOVES =
-    arrayOf(Direction.VERTICAL, Direction.HORIZONTAL, Direction.VERTICAL_BACKWARDS, Direction.HORIZONTAL_BACKWARDS)

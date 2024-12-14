@@ -24,16 +24,12 @@ private fun part1(grid: Grid): Int {
     }
 }
 
-private fun part2(grid: Grid): Int {
-    return grid.findAll('A').count { aPoint ->
-        Direction.entries
-            .filter { it.name.startsWith("DIAGONAL") }
-            .count { dir ->
-                (grid.get(aPoint.move(dir.point)) == 'M' && grid.get(aPoint.moveOpposite(dir.point)) == 'S') ||
-                        (grid.get(aPoint.move(dir.point)) == 'S' && grid.get(aPoint.moveOpposite(dir.point)) == 'M')
-            } / 2 == 2 //removed double counts returning 2
-
-    }
+private fun part2(grid: Grid): Int = grid.findAll('A').count { aPoint ->
+    Direction.entries.filter { it.name.startsWith("DIAGONAL") }
+        .count { dir ->
+            (grid.get(aPoint.move(dir.point)) == 'M' && grid.get(aPoint.moveOpposite(dir.point)) == 'S') ||
+                    (grid.get(aPoint.move(dir.point)) == 'S' && grid.get(aPoint.moveOpposite(dir.point)) == 'M')
+        } / 2 == 2 //removed double counts returning 2
 }
 
 private val XMAS_LETTERS = "XMAS".toCharArray()

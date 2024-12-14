@@ -12,41 +12,37 @@ private fun solve(path: String, part1: Int, part2: Int) {
     check(part2, part2(rules, updates))
 }
 
-private fun part1(rules: List<String>, updates: List<String>): Int {
-    return updates.filter { getRuleBreakingIndex(it, rules) == -1 }
-        .sumOf { getCenterNo(it) }
-}
+private fun part1(rules: List<String>, updates: List<String>): Int = updates.filter {
+    getRuleBreakingIndex(it, rules) == -1
+}.sumOf { getCenterNo(it) }
 
-private fun part2(rules: List<String>, updates: List<String>): Int {
-    return updates.filter { getRuleBreakingIndex(it, rules) != -1 }
-        .map {
-            var splitUpdates = splitInt(it, ",")
-            while (true) {
-                val wrongIndex = getRuleBreakingIndex(splitUpdates.joinToString(","), rules)
-                if (wrongIndex == -1) break
-                var correctIndex = wrongIndex + 1
-                var lastUpdate = splitUpdates.toMutableList()
-                while (correctIndex <= splitUpdates.size - 1 &&
-                    getRuleBreakingIndex(lastUpdate.joinToString(","), rules) == wrongIndex
-                ) {
-                    lastUpdate = splitUpdates.toMutableList()
-                    lastUpdate[wrongIndex] = lastUpdate[correctIndex].also {
-                        lastUpdate[correctIndex] = lastUpdate[wrongIndex]
-                    }
-                    correctIndex++
-                }
-                val newWrongIndex = getRuleBreakingIndex(lastUpdate.joinToString(","), rules)
-                if (newWrongIndex == -1 || newWrongIndex > wrongIndex) {
-                    splitUpdates = lastUpdate
-                }
-
+private fun part2(rules: List<String>, updates: List<String>): Int = updates.filter {
+    getRuleBreakingIndex(it, rules) != -1
+}.map {
+    var splitUpdates = splitInt(it, ",")
+    while (true) {
+        val wrongIndex = getRuleBreakingIndex(splitUpdates.joinToString(","), rules)
+        if (wrongIndex == -1) break
+        var correctIndex = wrongIndex + 1
+        var lastUpdate = splitUpdates.toMutableList()
+        while (correctIndex <= splitUpdates.size - 1 && getRuleBreakingIndex(
+                lastUpdate.joinToString(","), rules
+            ) == wrongIndex
+        ) {
+            lastUpdate = splitUpdates.toMutableList()
+            lastUpdate[wrongIndex] = lastUpdate[correctIndex].also {
+                lastUpdate[correctIndex] = lastUpdate[wrongIndex]
             }
-            splitUpdates.joinToString(",")
+            correctIndex++
         }
-        .sumOf {
-            getCenterNo(it)
+        val newWrongIndex = getRuleBreakingIndex(lastUpdate.joinToString(","), rules)
+        if (newWrongIndex == -1 || newWrongIndex > wrongIndex) {
+            splitUpdates = lastUpdate
         }
-}
+    }
+    splitUpdates.joinToString(",")
+}.sumOf { getCenterNo(it) }
+
 
 private fun getRuleBreakingIndex(updates: String, rules: List<String>): Int {
     val splitUpdates = splitInt(updates, ",")

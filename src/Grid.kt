@@ -1,7 +1,9 @@
-class Grid(var grid: Array<CharArray>) {
+class Grid(var grid: Array<CharArray>, var emptyChar: Char = '.') {
 
     companion object {
         const val OUT_OF_BOUND_CHAR = '☠'
+        fun createWithSize(width: Int, height: Int, emptyChar: Char = '.'): Grid =
+            Grid(Array<CharArray>(height) { CharArray(width) { emptyChar } }, emptyChar)
     }
 
     constructor(lines: List<String>) : this(toChars(lines))
@@ -18,18 +20,16 @@ class Grid(var grid: Array<CharArray>) {
         }
     }
 
-    fun inside(p: Point): Boolean = checkRange(p, 0 until rows(),  0 until columns())
+    fun inside(p: Point): Boolean = checkRange(p, 0 until rows(), 0 until columns())
 
-    fun isBorder(p: Point): Boolean= checkRange(p, 0,  0 until columns()) ||
-        checkRange(p, rows(),  0 until columns()) ||
-        checkRange(p, 0 until rows(),  0) ||
-        checkRange(p, 0 until rows(),  columns())
+    fun isBorder(p: Point): Boolean =
+        checkRange(p, 0, 0 until columns()) || checkRange(p, rows(), 0 until columns()) || checkRange(
+            p, 0 until rows(), 0
+        ) || checkRange(p, 0 until rows(), columns())
 
 
-    fun isCorner(p: Point): Boolean = (p.y == 0 && p.x == 0) ||
-        (p.y == 0 && p.x == columns()) ||
-        (p.y == rows() && p.x == 0) ||
-        (p.y == rows() && p.x == columns())
+    fun isCorner(p: Point): Boolean =
+        (p.y == 0 && p.x == 0) || (p.y == 0 && p.x == columns()) || (p.y == rows() && p.x == 0) || (p.y == rows() && p.x == columns())
 
     private fun checkRange(p: Point, yRange: IntRange, xRange: IntRange): Boolean = p.y in yRange && p.x in xRange
     private fun checkRange(p: Point, y: Int, xRange: IntRange): Boolean = p.y == y && p.x in xRange
@@ -84,10 +84,13 @@ class Grid(var grid: Array<CharArray>) {
 
     fun print() {
         for (i in grid.indices) {
-            for (j in grid[i].indices) {
-                print(grid[i][j])
-            }
-            println()
+            buildString {
+                for (j in grid[i].indices) {
+                    append(grid[i][j])
+                }
+            }.let { it.println() }
         }
     }
+
+    fun emptyChar() = emptyChar
 }

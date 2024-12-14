@@ -62,7 +62,7 @@ private fun commandGuard(grid: Grid, action: (GuardChars, Point) -> Unit) {
     }
 }
 
-fun walkStraight(
+private fun walkStraight(
     position: Point,
     direction: Direction,
     grid: Grid,

@@ -24,7 +24,7 @@ private typealias Blocks = List<Block>
 private typealias Files = List<Block.File>
 private typealias Chunks = List<Chunk>
 
-fun Blocks.checkSum(): Long = withIndex().sumOf { (i, block) ->
+private fun Blocks.checkSum(): Long = withIndex().sumOf { (i, block) ->
     when (block) {
         is Block.File -> block.id.toLong().times(i)
         else -> 0

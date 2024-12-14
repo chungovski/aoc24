@@ -13,8 +13,8 @@ private typealias Stone = Long
 private typealias Stones = List<Long>
 private val cache = mutableMapOf<Pair<Stone, Int>, Stone>()
 
-fun part1(stones: Stones): Long = stones.blink(25)
-fun part2(stones: Stones): Long = stones.blink(75)
+private fun part1(stones: Stones): Long = stones.blink(25)
+private fun part2(stones: Stones): Long = stones.blink(75)
 
 private fun Stones.blink(times: Int): Long = this.sumOf { it.change(times) }
 

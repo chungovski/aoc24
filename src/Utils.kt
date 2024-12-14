@@ -32,11 +32,10 @@ fun splitInt(str: String, delimiter: String): List<Int> = split(str, delimiter) 
 
 fun splitLong(str: String, delimiter: String): List<Long> = split(str, delimiter) { s: String -> s.toLong() }
 
-fun <T> split(str: String, delimiter: String, mapper: (String) -> T): List<T> = str.trim()
-    .split(delimiter)
+fun <T> split(str: String,  delimiter: String, mapper: (String) -> T): List<T> = str.trim()
+    .split(delimiter.toRegex())
     .filter { it.isNotEmpty() }
     .map { mapper(it.trim()) }
-
 
 /**
  * Converts a list of lines into a char-grid.
@@ -52,8 +51,6 @@ fun <T> toColumns(lines: List<List<T>>): List<MutableList<T>> {
         lines.map { it[colIndex] }.toMutableList()
     }
 }
-
-fun String.sections() = this.split("\n\n")
 
 /**
  * Converts string to md5 hash.

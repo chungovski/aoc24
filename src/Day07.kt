@@ -5,16 +5,12 @@ fun main() {
 
 private fun solve(path: String, part1: Long, part2: Long) {
     val lines = lines(path)
-    val map = mutableMapOf<Long, MutableList<List<Long>>>().apply {
+    val map = mutableListOf<Pair<Long, List<Long>>>().apply {
         lines.forEach { it ->
             split(it, ":").let {
                 val key = it[0].toLong()
                 val value = it[1].split(" ").map { it.toLong() }
-                if (contains(key)) {
-                    get(key)?.add(value)
-                } else {
-                    put(key, mutableListOf(value))
-                }
+                add(key to value)
             }
         }
     }
@@ -22,30 +18,26 @@ private fun solve(path: String, part1: Long, part2: Long) {
     check(part2, part2(map))
 }
 
-fun part1(map: Map<Long, List<List<Long>>>): Long {
-    return map.map { (key, value) ->
-        key.times(value.count {
-            calcAllResults(
-                it,
-                listOf(OPERATOR.ADD, OPERATOR.TIMES)
-            ).contains(key)
-        })
-    }.sumOf { it }
+private typealias ResultOperandsMap = List<Pair<Long, List<Long>>>
+
+private fun part1(map: ResultOperandsMap): Long = map.sumOf { (key, value) ->
+    if (calcAllResults(
+            value, listOf(OPERATOR.ADD, OPERATOR.TIMES)
+        ).contains(key)
+    ) key else 0
 }
 
-fun part2(map: Map<Long, List<List<Long>>>): Long {
-    return map.map { (key, value) ->
-        key.times(value.count {
-            calcAllResults(
-                it, OPERATOR.entries
-            ).contains(key)
-        })
-    }.sumOf { it }
+
+private fun part2(map: ResultOperandsMap): Long = map.sumOf { (key, value) ->
+    if (calcAllResults(
+            value, OPERATOR.entries
+        ).contains(key)
+    ) key else 0
 }
 
-private fun calcAllResults(nrs: List<Long>, allowedOperators: List<OPERATOR>): List<Long> {
-    if (nrs.size == 1) return nrs
-    return generateExpression(nrs, allowedOperators).map { exp ->
+private fun calcAllResults(nrs: List<Long>, allowedOperators: List<OPERATOR>): List<Long> = when {
+    nrs.size == 1 -> nrs
+    else -> generateExpression(nrs, allowedOperators).map { exp ->
         exp.foldIndexed(0L) { i, acc, el ->
             when {
                 i == 0 -> el as Long
@@ -56,9 +48,9 @@ private fun calcAllResults(nrs: List<Long>, allowedOperators: List<OPERATOR>): L
     }
 }
 
-private fun generateExpression(nrs: List<Long>, allowedOperators: List<OPERATOR>): List<List<Any>> {
-    if (nrs.size == 1) return listOf(listOf(nrs.first()))
-    return generateExpression(nrs.drop(1), allowedOperators).flatMap { acc ->
+private fun generateExpression(nrs: List<Long>, allowedOperators: List<OPERATOR>): List<List<Any>> = when {
+    nrs.size == 1 -> listOf(listOf(nrs.first()))
+    else -> generateExpression(nrs.drop(1), allowedOperators).flatMap { acc ->
         allowedOperators.map { op -> listOf(nrs.first(), op) + acc }
     }
 }
