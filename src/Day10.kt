@@ -25,7 +25,7 @@ private fun Point.findNextHeight(i: Int, grid: Grid): List<Point> = when {
 }
 
 private fun Point.nextMoves(char: Char, grid: Grid): List<Point> = buildList {
-    cardinalDirections.forEach {
+    orthogonalDirections.forEach {
         move(it.point).let {
             if (grid.get(it) == char) {
                 add(it)

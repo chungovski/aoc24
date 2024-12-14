@@ -48,9 +48,8 @@ private data class Bathroom(val width: Int, val height: Int, val guards: List<Gu
         }
     }
 
-    fun getSafetyFactor(): Int = getQuadrants().filter { it.key != QUADRANT.NONE }.values.fold(1) { acc, guards ->
-        acc * guards.size
-    }
+    fun getSafetyFactor(): Int = getQuadrants().filter { it.key != QUADRANT.NONE }
+        .values.fold(1) { acc, guards -> acc * guards.size }
 
     fun print() {
         for (y in 0..height) {
@@ -62,7 +61,8 @@ private data class Bathroom(val width: Int, val height: Int, val guards: List<Gu
         }
     }
 
-    private fun getQuadrants(): Map<QUADRANT, List<Guard>> = this.guards.groupBy { it.belongsToQuadrant(width, height) }
+    private fun getQuadrants(): Map<QUADRANT, List<Guard>> =
+        this.guards.groupBy { it.belongsToQuadrant(width, height) }
 }
 
 private enum class QUADRANT { NONE, FIRST, SECOND, THIRD, FOURTH }
@@ -71,8 +71,14 @@ private fun List<List<Int>>.parseBathroom(): Bathroom {
     val guards = buildList<Guard> {
         this@parseBathroom.forEach { add(Guard(Point(it[0], it[1]), Point(it[2], it[3]))) }
     }
-    return Bathroom(guards.map { it.position.x }.max() + 1, guards.map { it.position.y }.max() + 1, guards)
+    return Bathroom(
+        guards.map { it.position.x }.max() + 1,
+        guards.map { it.position.y }.max() + 1,
+        guards
+    )
 }
 
-fun Point.teleportedPoint(width: Int, height: Int): Point = Point(this.x.wrapAround(width), this.y.wrapAround(height))
+fun Point.teleportedPoint(width: Int, height: Int): Point =
+    Point(this.x.wrapAround(width), this.y.wrapAround(height))
+
 fun Int.wrapAround(bound: Int) = (this + bound) % bound

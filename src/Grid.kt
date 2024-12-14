@@ -20,20 +20,37 @@ class Grid(var grid: Array<CharArray>, var emptyChar: Char = '.') {
         }
     }
 
-    fun inside(p: Point): Boolean = checkRange(p, 0 until rows(), 0 until columns())
+    fun inside(p: Point): Boolean = checkRange(
+        p,
+        0 until rows(),
+        0 until columns()
+    )
 
-    fun isBorder(p: Point): Boolean =
-        checkRange(p, 0, 0 until columns()) || checkRange(p, rows(), 0 until columns()) || checkRange(
-            p, 0 until rows(), 0
-        ) || checkRange(p, 0 until rows(), columns())
+    fun isBorderVertical(p: Point): Boolean =
+        checkRange(p, 0, 0 until columns()) ||
+                checkRange(p, rows(), 0 until columns())
+
+    fun isBorderHorizontal(p: Point): Boolean =
+        checkRange(p, 0 until rows(), 0) ||
+                checkRange(p, 0 until rows(), columns())
+
+    fun isBorder(p: Point): Boolean = isBorderVertical(p) || isBorderHorizontal(p)
 
 
     fun isCorner(p: Point): Boolean =
-        (p.y == 0 && p.x == 0) || (p.y == 0 && p.x == columns()) || (p.y == rows() && p.x == 0) || (p.y == rows() && p.x == columns())
+        (p.y == 0 && p.x == 0) ||
+                (p.y == 0 && p.x == columns()) ||
+                (p.y == rows() && p.x == 0) ||
+                (p.y == rows() && p.x == columns())
 
-    private fun checkRange(p: Point, yRange: IntRange, xRange: IntRange): Boolean = p.y in yRange && p.x in xRange
-    private fun checkRange(p: Point, y: Int, xRange: IntRange): Boolean = p.y == y && p.x in xRange
-    private fun checkRange(p: Point, yRange: IntRange, x: Int): Boolean = p.y in yRange && p.x == x
+    private fun checkRange(p: Point, yRange: IntRange, xRange: IntRange): Boolean =
+        p.y in yRange && p.x in xRange
+
+    private fun checkRange(p: Point, y: Int, xRange: IntRange): Boolean =
+        p.y == y && p.x in xRange
+
+    private fun checkRange(p: Point, yRange: IntRange, x: Int): Boolean =
+        p.y in yRange && p.x == x
 
 
     fun find(c: Char): Point? = findAll(c).firstOrNull()
@@ -42,23 +59,25 @@ class Grid(var grid: Array<CharArray>, var emptyChar: Char = '.') {
 
     fun findAny(cs: List<Char>): Map<Char, Point> = findWith { char -> cs.any { char == it } }
 
-    fun findWith(predicate: (Char) -> Boolean): Map<Char, Point> = findAnyWith(predicate).map {
-        it.key to it.value.first()
-    }.toMap()
+    fun findWith(predicate: (Char) -> Boolean): Map<Char, Point> =
+        findAnyWith(predicate).map {
+            it.key to it.value.first()
+        }.toMap()
 
     fun getDistinct(): List<Char> = grid.flatMap { it.distinct() }
 
-    fun findAnyWith(predicate: (Char) -> Boolean): Map<Char, List<Point>> = buildMap<Char, MutableList<Point>> {
-        getAllPoints().forEach { (point, char) ->
-            if (predicate(char)) {
-                if (containsKey(char)) {
-                    get(char)?.add(point)
-                } else {
-                    put(char, mutableListOf(point))
+    fun findAnyWith(predicate: (Char) -> Boolean): Map<Char, List<Point>> =
+        buildMap<Char, MutableList<Point>> {
+            getAllPoints().forEach { (point, char) ->
+                if (predicate(char)) {
+                    if (containsKey(char)) {
+                        get(char)?.add(point)
+                    } else {
+                        put(char, mutableListOf(point))
+                    }
                 }
             }
         }
-    }
 
     fun get(x: Int, y: Int): Char = grid[y][x]
 

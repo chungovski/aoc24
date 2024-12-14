@@ -9,5 +9,7 @@ enum class Direction(val point: Point) {
     DIAGONAL_UP_LEFT(Point(-1, -1)),
 }
 
-val cardinalDirections =
-    listOf(Direction.VERTICAL, Direction.HORIZONTAL, Direction.VERTICAL_BACKWARDS, Direction.HORIZONTAL_BACKWARDS)
+val orthogonalDirections = listOf(
+    Direction.VERTICAL, Direction.HORIZONTAL,
+    Direction.VERTICAL_BACKWARDS, Direction.HORIZONTAL_BACKWARDS
+)
