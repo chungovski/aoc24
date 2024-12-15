@@ -29,7 +29,7 @@ private fun part2(grid: Grid): Int = grid.findAll('A').count { aPoint ->
         .count { dir ->
             (grid.get(aPoint.move(dir.point)) == 'M' && grid.get(aPoint.moveOpposite(dir.point)) == 'S') ||
                     (grid.get(aPoint.move(dir.point)) == 'S' && grid.get(aPoint.moveOpposite(dir.point)) == 'M')
-        } / 2 == 2 //removed double counts returning 2
+        } / 2 == 2 // Removed double counts and returning 2
 }
 
 private val XMAS_LETTERS = "XMAS".toCharArray()

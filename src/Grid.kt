@@ -2,7 +2,8 @@ class Grid(var grid: Array<CharArray>, var emptyChar: Char = '.') {
 
     companion object {
         const val OUT_OF_BOUND_CHAR = '☠'
-        fun createWithSize(width: Int, height: Int, emptyChar: Char = '.'): Grid =
+        const val DEFAULT_EMPTY_CHAR = '.'
+        fun createWithSize(width: Int, height: Int, emptyChar: Char = DEFAULT_EMPTY_CHAR): Grid =
             Grid(Array<CharArray>(height) { CharArray(width) { emptyChar } }, emptyChar)
     }
 

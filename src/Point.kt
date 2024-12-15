@@ -1,9 +1,9 @@
 data class Point(val x: Int, val y: Int) {
-    fun move(p: Point): Point = move(p.x, p.y)
+    fun move(step: Point): Point = move(step.x, step.y)
 
-    fun moveOpposite(p: Point): Point = move(-p.x, -p.y)
+    fun moveOpposite(step: Point): Point = move(-step.x, -step.y)
 
-    fun move(x: Int, y: Int): Point = Point(this.x + x, this.y + y)
+    fun move(stepX: Int, stepY: Int): Point = Point(this.x + stepX, this.y + stepY)
 
     fun getDifference(p: Point): Point = Point(p.x - this.x, p.y - this.y)
 }

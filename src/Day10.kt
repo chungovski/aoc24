@@ -18,7 +18,7 @@ private fun part2(grid: Grid): Int = grid.findAll('0').sumOf {
 }
 
 private fun Point.findNextHeight(i: Int, grid: Grid): List<Point> = when {
-    i == 10 -> listOf(this) // input index starts with 1
+    i == 10 -> listOf(this) // Input index starts with 1
     else -> nextMoves(i.digitToChar(), grid).fold(listOf()) { list, point ->
         list + point.findNextHeight(i + 1, grid)
     }

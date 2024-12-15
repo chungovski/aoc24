@@ -25,8 +25,7 @@ private fun Stone.change(times: Int): Stone = when {
         val oneLess = times - 1
         when {
             this == 0L -> 1L.change(oneLess)
-            str.length % 2 == 0 -> str.chunked(str.length / 2)
-                .sumOf { it.toLong().change(oneLess) }
+            str.length % 2 == 0 -> str.chunked(str.length / 2).sumOf { it.toLong().change(oneLess) }
             else -> 2024.times(this).change(oneLess)
         }
     }

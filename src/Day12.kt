@@ -32,7 +32,7 @@ fun Grid.parseRegions() = buildList {
             val currentField = queue.removeFirst()
             if (visited.add(currentField)) {
                 fields.add(currentField)
-                //add all neighbouring that are inside grid and matching the plant
+                // Add all neighbouring that are inside grid and matching the plant
                 queue.addAll(orthogonalDirections.map { currentField.move(it.point) }
                     .filter { this@parseRegions.inside(it) && it to plant in plantFieldMap })
             }
@@ -51,14 +51,14 @@ fun Region.getPerimeterAmount(): Int = this.sumOf { p ->
 fun Region.getSidesAmount(): Int = this.sumOf { it.getCornersAmount(this) }
 
 fun Point.getCornersAmount(region: Region): Int =
-    (orthogonalDirections + orthogonalDirections.first()) //all combinations
+    (orthogonalDirections + orthogonalDirections.first()) // Complete circular pairs
         .zipWithNext().count() { (dir1, dir2) ->
-            val orthogonalMovedPoint1 = this.move(dir1.point)
-            val orthogonalMovedPoint2 = this.move(dir2.point)
-            val diagonallyMovedPoint = orthogonalMovedPoint1.move(dir2.point)
-            // it's a corner if either neighbours are outside or both are inside but diagonal neighbour outside
-            (orthogonalMovedPoint1 !in region && orthogonalMovedPoint2 !in region) ||
-                    (orthogonalMovedPoint1 in region && orthogonalMovedPoint2 in region && diagonallyMovedPoint !in region)
+            val orthogonallyMovedPoint1 = this.move(dir1.point)
+            val orthogonallyMovedPoint2 = this.move(dir2.point)
+            val diagonallyMovedPoint = orthogonallyMovedPoint1.move(dir2.point)
+            // A corner exists if neighbours are both outside, or both  inside and diagonal outside
+            (orthogonallyMovedPoint1 !in region && orthogonallyMovedPoint2 !in region) ||
+                    (orthogonallyMovedPoint1 in region && orthogonallyMovedPoint2 in region && diagonallyMovedPoint !in region)
 
         }
 

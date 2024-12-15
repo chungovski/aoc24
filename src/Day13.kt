@@ -8,7 +8,9 @@ private fun solve(path: String, part1: Long, part2: Long) {
     val machines = lines.chunked(4).map {
         val (a, b, prize) = it
         Machine(
-            a.extractPoint('+'), b.extractPoint('+'), prize.extractPoint('=')
+            a.extractPoint('+'),
+            b.extractPoint('+'),
+            prize.extractPoint('=')
         )
     }
     check(part1, part1(machines))
@@ -17,14 +19,13 @@ private fun solve(path: String, part1: Long, part2: Long) {
 
 private fun part1(machines: List<Machine>): Long = machines.sumOf { it.getCost() }
 
-private fun part2(machines: List<Machine>): Long = machines.sumOf { it.getCost(10000000000000L) }
+private fun part2(machines: List<Machine>): Long = machines.sumOf { it.getCost(10_000_000_000_000L) }
 
 private typealias BigPoint = Pair<Long, Long>
 
 private data class Machine(val a: BigPoint, val b: BigPoint, val prize: BigPoint) {
     private val costA = 3
     private val costB = 1
-
 
     fun getCost(offset: Long = 0): Long = calcCombinations(
         a, b, BigPoint(prize.first + offset, prize.second + offset)
@@ -40,7 +41,7 @@ private fun calcCombinations(a: BigPoint, b: BigPoint, sum: BigPoint): Pair<Long
     val crossDiffA = sumX * bY - sumY * bX
     val crossDiffB = aX * sumY - aY * sumX
 
-    // no combination possible
+    // No combination possible
     if (determinant == 0L || crossDiffA % determinant != 0L || crossDiffB % determinant != 0L) {
         return 0L to 0L
     }
