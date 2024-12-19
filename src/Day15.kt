@@ -31,11 +31,11 @@ private fun part2(gridLines: List<String>, moves: String): Int =
         .findAll(WIDE_BOX_LEFT).sumOf { 100 * it.y + it.x }
 
 private fun Grid.runMoves(moves: String): Grid =
-    moves.mapNotNull { DirectionChars.from(it)?.direction }.forEach { dir ->
+    moves.mapNotNull { DirectionChar.from(it)?.direction }.forEach { dir ->
         this.find(ROBOT)?.moveAdjacent(dir.point, this)
     }.let { this }
 
-private fun Point.moveAdjacent(step: Point, grid: Grid): Boolean {
+private fun Point.moveAdjacent(step: Point, grid: Grid) {
     val visited = mutableSetOf<Point>()
     val queue = ArrayDeque<Point>().apply { add(this@moveAdjacent) }
     while (queue.isNotEmpty()) {
@@ -46,7 +46,7 @@ private fun Point.moveAdjacent(step: Point, grid: Grid): Boolean {
                 BOX -> queue.add(nextP)
                 WIDE_BOX_LEFT -> queue.addWideBoxToQueue(setOf(nextP, nextP.getRight()), step)
                 WIDE_BOX_RIGHT -> queue.addWideBoxToQueue(setOf(nextP.getLeft(), nextP), step)
-                WALL -> return false
+                WALL -> return
             }
         }
     }
@@ -54,7 +54,6 @@ private fun Point.moveAdjacent(step: Point, grid: Grid): Boolean {
         grid.set(it.move(step), grid.get(it))
         grid.set(it, grid.emptyChar)
     }
-    return true
 }
 
 private fun Point.getLeft(): Point = this.move(-1, 0)
@@ -66,15 +65,3 @@ private fun String.replaceAll(replacements: Map<String, String>): String =
 private fun ArrayDeque<Point>.addWideBoxToQueue(points: Set<Point>, step: Point) = this.addAll(
     if (step.x > 0 || step.y > 0) points else points.reversed()
 )
-
-private enum class DirectionChars(val direction: Direction, val char: Char) {
-    UP(Direction.VERTICAL_BACKWARDS, '^'),
-    RIGHT(Direction.HORIZONTAL, '>'),
-    DOWN(Direction.VERTICAL, 'v'),
-    LEFT(Direction.HORIZONTAL_BACKWARDS, '<');
-
-    companion object {
-        private val charMap = entries.associateBy { it.char }
-        infix fun from(value: Char) = charMap[value]
-    }
-}

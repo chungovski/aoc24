@@ -10,21 +10,21 @@ private fun solve(path: String, part1: Int, part2: Int) {
 }
 
 private fun part1(grid: Grid): Int = grid.findAll('0').sumOf {
-    it.findNextHeight(1, grid).toSet().count()
+    it.findEnd(1, grid).toSet().count()
 }
 
 private fun part2(grid: Grid): Int = grid.findAll('0').sumOf {
-    it.findNextHeight(1, grid).count()
+    it.findEnd(1, grid).count()
 }
 
-private fun Point.findNextHeight(i: Int, grid: Grid): List<Point> = when {
+private fun Point.findEnd(i: Int, grid: Grid): List<Point> = when {
     i == 10 -> listOf(this) // Input index starts with 1
-    else -> nextMoves(i.digitToChar(), grid).fold(listOf()) { list, point ->
-        list + point.findNextHeight(i + 1, grid)
+    else -> getPaths(i.digitToChar(), grid).fold(listOf()) { list, point ->
+        list + point.findEnd(i + 1, grid)
     }
 }
 
-private fun Point.nextMoves(char: Char, grid: Grid): List<Point> = buildList {
+private fun Point.getPaths(char: Char, grid: Grid): List<Point> = buildList {
     orthogonalDirections.forEach {
         move(it.point).let {
             if (grid.get(it) == char) {

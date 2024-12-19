@@ -4,7 +4,7 @@ class Grid(var grid: Array<CharArray>, var emptyChar: Char = '.') {
         const val OUT_OF_BOUND_CHAR = '☠'
         const val DEFAULT_EMPTY_CHAR = '.'
         fun createWithSize(width: Int, height: Int, emptyChar: Char = DEFAULT_EMPTY_CHAR): Grid =
-            Grid(Array<CharArray>(height) { CharArray(width) { emptyChar } }, emptyChar)
+            Grid(Array<CharArray>(height + 1) { CharArray(width + 1) { emptyChar } }, emptyChar)
     }
 
     constructor(lines: List<String>) : this(toChars(lines))

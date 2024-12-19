@@ -43,20 +43,20 @@ const val STEP = 'X'
 private fun startWalking(grid: Grid) {
     var guardOnGrid = true
     val path = mutableMapOf<Direction, MutableSet<Point>>().apply {
-        GuardChars.entries.map { it.direction }.forEach { put(it, mutableSetOf()) }
+        DirectionChar.entries.map { it.direction }.forEach { put(it, mutableSetOf()) }
     }
     while (guardOnGrid) {
         commandGuard(grid) { guard, pos ->
             val newPosition = walkStraight(pos, guard.direction, grid, path)
             guardOnGrid = grid.inside(newPosition)
         }
-        guardOnGrid = grid.findAny(GuardChars.entries.map { it.char }).isNotEmpty()
+        guardOnGrid = grid.findAny(DirectionChar.entries.map { it.char }).isNotEmpty()
     }
 }
 
-private fun commandGuard(grid: Grid, action: (GuardChars, Point) -> Unit) {
-    grid.findAny(GuardChars.entries.map { it.char }).forEach { (char, pos) ->
-        GuardChars.from(char)?.let {
+private fun commandGuard(grid: Grid, action: (DirectionChar, Point) -> Unit) {
+    grid.findAny(DirectionChar.entries.map { it.char }).forEach { (char, pos) ->
+        DirectionChar.from(char)?.let {
             action(it, pos)
         }
     }
@@ -81,29 +81,9 @@ private fun walkStraight(
     if (grid.get(newPosition.move(direction.point)) == Grid.OUT_OF_BOUND_CHAR) {
         grid.set(newPosition, STEP)
     } else {
-        GuardChars.from(turn(direction))?.let { grid.set(newPosition, it.char) }
+        DirectionChar.from(direction.turn())?.let { grid.set(newPosition, it.char) }
     }
     return newPosition
 }
 
-private fun turn(direction: Direction): Direction = when (direction) {
-    Direction.VERTICAL_BACKWARDS -> Direction.HORIZONTAL
-    Direction.HORIZONTAL -> Direction.VERTICAL
-    Direction.VERTICAL -> Direction.HORIZONTAL_BACKWARDS
-    Direction.HORIZONTAL_BACKWARDS -> Direction.VERTICAL_BACKWARDS
-    else -> Direction.VERTICAL_BACKWARDS
-}
 
-private enum class GuardChars(val direction: Direction, val char: Char) {
-    UP(Direction.VERTICAL_BACKWARDS, '^'),
-    RIGHT(Direction.HORIZONTAL, '>'),
-    DOWN(Direction.VERTICAL, 'v'),
-    LEFT(Direction.HORIZONTAL_BACKWARDS, '<');
-
-    companion object {
-        private val charMap = entries.associateBy { it.char }
-        private val directionMap = entries.associateBy { it.direction }
-        infix fun from(value: Char) = charMap[value]
-        infix fun from(value: Direction) = directionMap[value]
-    }
-}
