@@ -16,7 +16,7 @@ private val cache = mutableMapOf<Pair<Stone, Int>, Stone>()
 private fun part1(stones: Stones): Long = stones.blink(25)
 private fun part2(stones: Stones): Long = stones.blink(75)
 
-private fun Stones.blink(times: Int): Long = this.sumOf { it.change(times) }
+private fun Stones.blink(times: Int): Long = sumOf { it.change(times) }
 
 private fun Stone.change(times: Int): Stone = when {
     times == 0 -> 1L

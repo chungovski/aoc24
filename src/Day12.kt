@@ -20,7 +20,7 @@ private typealias Region = Set<Point>
 
 fun Grid.parseRegions() = buildList {
     val visited = mutableSetOf<Point>()
-    val plantFieldMap = this@parseRegions.getAllPoints()
+    val plantFieldMap = getAllPoints()
 
     plantFieldMap.forEach { (field, plant) ->
         if (field in visited) {
@@ -34,27 +34,27 @@ fun Grid.parseRegions() = buildList {
                 fields.add(currentField)
                 // Add all neighbouring that are inside grid and matching the plant
                 queue.addAll(orthogonalDirections.map { currentField.move(it.point) }
-                    .filter { this@parseRegions.inside(it) && it to plant in plantFieldMap })
+                    .filter { inside(it) && it to plant in plantFieldMap })
             }
         }
         add(fields)
     }
 }
 
-fun Region.getArea(): Int = this.size
+fun Region.getArea(): Int = size
 
-fun Region.getPerimeterAmount(): Int = this.sumOf { p ->
+fun Region.getPerimeterAmount(): Int = sumOf { p ->
     orthogonalDirections.map { p.move(it.point) }
         .count { it !in this }
 }
 
-fun Region.getSidesAmount(): Int = this.sumOf { it.getCornersAmount(this) }
+fun Region.getSidesAmount(): Int = sumOf { it.getCornersAmount(this) }
 
 fun Point.getCornersAmount(region: Region): Int =
     (orthogonalDirections + orthogonalDirections.first()) // Complete circular pairs
         .zipWithNext().count() { (dir1, dir2) ->
-            val orthogonallyMovedPoint1 = this.move(dir1.point)
-            val orthogonallyMovedPoint2 = this.move(dir2.point)
+            val orthogonallyMovedPoint1 = move(dir1.point)
+            val orthogonallyMovedPoint2 = move(dir2.point)
             val diagonallyMovedPoint = orthogonallyMovedPoint1.move(dir2.point)
             // A corner exists if neighbours are both outside, or both  inside and diagonal outside
             (orthogonallyMovedPoint1 !in region && orthogonallyMovedPoint2 !in region) ||

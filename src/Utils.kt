@@ -32,10 +32,8 @@ fun splitInt(str: String, delimiter: String): List<Int> = split(str, delimiter) 
 
 fun splitLong(str: String, delimiter: String): List<Long> = split(str, delimiter) { s: String -> s.toLong() }
 
-fun <T> split(str: String,  delimiter: String, mapper: (String) -> T): List<T> = str.trim()
-    .split(delimiter.toRegex())
-    .filter { it.isNotEmpty() }
-    .map { mapper(it.trim()) }
+fun <T> split(str: String, delimiter: String, mapper: (String) -> T): List<T> =
+    str.trim().split(delimiter.toRegex()).filter { it.isNotEmpty() }.map { mapper(it.trim()) }
 
 /**
  * Converts a list of lines into a char-grid.
@@ -51,6 +49,15 @@ fun <T> toColumns(lines: List<List<T>>): List<MutableList<T>> {
         lines.map { it[colIndex] }.toMutableList()
     }
 }
+
+/**
+ * Create all possible permutations of the elements in a list.
+ */
+fun <T> List<T>.permutations(): List<List<T>> = if (size == 1) listOf(this)
+else flatMap { i -> (this - i).permutations().map { listOf(i) + it } }
+
+
+fun String.permutations(): List<String> = toList().permutations().map { it.joinToString("") }
 
 /**
  * Converts string to md5 hash.

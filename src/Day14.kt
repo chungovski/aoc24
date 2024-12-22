@@ -26,7 +26,7 @@ private fun part2(lines: List<List<Int>>): Int = lines.parseBathroom().let { ini
 private data class Guard(var position: Point, val velocity: Point) {
     fun belongsToQuadrant(width: Int, height: Int): QUADRANT {
         val (xCutoff, yCutoff) = width / 2 to height / 2 //lol shorter doesn't mean more readable
-        val (x, y) = this.position
+        val (x, y) = position
         return when {
             x == xCutoff || y == yCutoff -> QUADRANT.NONE
             x < xCutoff && y < yCutoff -> QUADRANT.FIRST
