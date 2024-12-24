@@ -53,7 +53,7 @@ fun <T> toColumns(lines: List<List<T>>): List<MutableList<T>> {
 /**
  * Create all possible permutations of the elements in a list.
  */
-fun <T> List<T>.permutations(): List<List<T>> = if (size == 1) listOf(this)
+fun <T> Collection<T>.permutations(): List<Collection<T>> = if (size == 1) listOf(this)
 else flatMap { i -> (this - i).permutations().map { listOf(i) + it } }
 
 
