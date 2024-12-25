@@ -9,9 +9,16 @@ class Grid(var grid: Array<CharArray>, var emptyChar: Char = '.') {
 
     constructor(lines: List<String>) : this(toChars(lines))
 
-    fun rows(): Int = grid.size
+    fun rows(): Array<CharArray> = grid
+    fun columns(): Array<CharArray> = Array(grid[0].size) { x ->
+        CharArray(grid.size) { y ->
+            grid[y][x]
+        }
+    }
 
-    fun columns(): Int = grid[0].size
+    private fun rowSize(): Int = grid.size
+
+    private fun columnSize(): Int = grid[0].size
 
     fun getAllPoints(): List<Pair<Point, Char>> = buildList {
         grid.forEachIndexed { y, row ->
@@ -23,26 +30,26 @@ class Grid(var grid: Array<CharArray>, var emptyChar: Char = '.') {
 
     fun inside(p: Point): Boolean = checkRange(
         p,
-        0 until rows(),
-        0 until columns()
+        0 until rowSize(),
+        0 until columnSize()
     )
 
     fun isBorderVertical(p: Point): Boolean =
-        checkRange(p, 0, 0 until columns()) ||
-                checkRange(p, rows(), 0 until columns())
+        checkRange(p, 0, 0 until columnSize()) ||
+                checkRange(p, rowSize(), 0 until columnSize())
 
     fun isBorderHorizontal(p: Point): Boolean =
-        checkRange(p, 0 until rows(), 0) ||
-                checkRange(p, 0 until rows(), columns())
+        checkRange(p, 0 until rowSize(), 0) ||
+                checkRange(p, 0 until rowSize(), columnSize())
 
     fun isBorder(p: Point): Boolean = isBorderVertical(p) || isBorderHorizontal(p)
 
 
     fun isCorner(p: Point): Boolean =
         (p.y == 0 && p.x == 0) ||
-                (p.y == 0 && p.x == columns()) ||
-                (p.y == rows() && p.x == 0) ||
-                (p.y == rows() && p.x == columns())
+                (p.y == 0 && p.x == columnSize()) ||
+                (p.y == rowSize() && p.x == 0) ||
+                (p.y == rowSize() && p.x == columnSize())
 
     private fun checkRange(p: Point, yRange: IntRange, xRange: IntRange): Boolean =
         p.y in yRange && p.x in xRange
@@ -98,7 +105,7 @@ class Grid(var grid: Array<CharArray>, var emptyChar: Char = '.') {
         grid[p.y][p.x] = c
     }
 
-    fun copy(): Grid = Grid(Array(rows()) { rowIndex ->
+    fun copy(): Grid = Grid(Array(rowSize()) { rowIndex ->
         grid[rowIndex].clone() // Clone each inner array to ensure a deep copy
     })
 

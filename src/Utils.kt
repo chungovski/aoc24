@@ -59,6 +59,9 @@ else flatMap { i -> (this - i).permutations().map { listOf(i) + it } }
 
 fun String.permutations(): List<String> = toList().permutations().map { it.joinToString("") }
 
+infix fun Set<*>.or(other: Set<*>): Set<*> = this.union(other)
+infix fun Set<*>.xor(other: Set<*>): Set<*> = (this or other).minus(this.intersect(other))
+
 /**
  * Converts string to md5 hash.
  */
